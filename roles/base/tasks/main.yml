@@ -1,0 +1,20 @@
+  - name: create user
+    tags: always
+    ansible.builtin.user:
+      name: jpierce
+      groups: root
+
+  - name: add sudoers file for jpierce
+    tags: always
+    ansible.builtin.copy:
+      src: sudoers_jpierce
+      dest: /etc/sudoers.d/jpierce
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: add ssh key for jpierce
+    tags: always
+    ansible.builtin.authorized_key:
+      user: jpierce
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMMGQ+/aCpFeP0mvqFoS5EwoNuZ9fUlQ+uNJ53RVyqTD jamstar@ubuntu-ws"

@@ -1,0 +1,36 @@
+- name: install apache on web servers 
+  tags: apache
+  ansible.builtin.package:
+    name:
+      - "{{ apache_package }}"
+
+- name: ensure apache is running 
+  tags: apache,ubuntu
+  ansible.builtin.service:
+    name: "{{ apache_service }}"
+    state: started
+
+- name: change email address for admin
+  tags: apache,fedora
+  ansible.builtin.lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin j@randomcourse.net
+  when: ansible_distribution == "Fedora"
+  notify: restart_apache
+
+# notify change instead of register
+#- name: restart apache
+#  ansible.builtin.service:
+#    name: "{{ apache_service }}"
+#    state: restarted
+#  when: apache.changed
+
+- name: copy html file for site
+  tags: apache,ubuntu
+  ansible.builtin.copy:
+    src: default_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
