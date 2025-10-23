@@ -27,7 +27,12 @@
   roles:
     - db_servers
 
-- hosts: web_servers
+#- hosts: web_servers
+#  become: true
+#  roles:
+#    - web_servers
+
+- hosts: apache
   become: true
   roles:
-    - web_servers
+    - geerlingguy.apache
